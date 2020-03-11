@@ -11,8 +11,8 @@
 #include <time.h>
 
 #define FILENAME "did.txt"
-#define VERSION "1.0"
-#define ON 'O'
+#define VERSION "1.1"
+#define ON '@'
 #define OFF '-'
 #define BORDER '#'
 #define MAXLINE 128
@@ -24,6 +24,7 @@ struct Task {
 	struct Task *prev;
 	char task[MAXLINE];
 	char done[NUMDATES + 1];
+	int count[NUMDATES];
 } head, tail;
 
 //*** Print how to use the program and the current default filename.
@@ -49,6 +50,15 @@ void errorExit(char *error, char *arg)
 	}
 	fprintf(stderr, error, arg);
 	exit(1);
+}
+
+//*** Get character to print for count.
+char countChar(int count)
+{
+	return (count > 35) ? '+' :
+		(count > 9) ? ((count - 10) + 'A') :
+		(count > 1) ? ((count - 2) + '2') :
+		(count == 1) ? ON : OFF;
 }
 
 //*** Return the day of the week. (0 = Sunday)
@@ -101,7 +111,7 @@ void printReport(char *date, char *cmd)
 	FILE *file;
 	time_t time1;
 	struct tm *tm1;
-	int i, j, y, m, d;
+	int i, j, y, m, d, total;
 	static char days[8] = "SMTWTFS";
 	char *c, line[MAXLINE], buf[MAXLINE], dates[NUMDATES][DATESIZE];
 
@@ -176,12 +186,15 @@ void printReport(char *date, char *cmd)
 			task->prev = currentTask;
 
 			strcpy(currentTask->task, &c[11]);
-			for (j = 0; j < NUMDATES; j++)
-				currentTask->done[j] = OFF;
+			for (j = 0; j < NUMDATES; j++) {
+				currentTask->count[j] = 0;
+				currentTask->done[j] = countChar(currentTask->count[j]);
+			}
 			currentTask->done[NUMDATES] = 0;
 			task = currentTask;
 		}
-		task->done[i] = ON;
+		task->count[i]++;
+		task->done[i] = countChar(task->count[i]);
 	}
 	fclose(file);
 
@@ -194,15 +207,18 @@ void printReport(char *date, char *cmd)
 	// Print tasks
 	for (task = head.next; task != &tail; task = task->next)
 	{
+		total = 0;
+		for (i = 0; i < NUMDATES; i++)
+			total += task->count[i];
 		task->task[5] = 0;
-		printf("%5s %c%s%c\n", task->task, BORDER, task->done, BORDER);
+		printf("%5s %c%s%c %s (%d)\n", task->task, BORDER, task->done, BORDER, task->task, total);
 	}
 
 	// Print bottom border
 	printf("      ");
 	for (i = 0; i < NUMDATES + 2; i++)
 		printf("%c", BORDER);
-	printf("\n");
+	printf(" (%d)\n", NUMDATES);
 
 	// Print bottom labels - year, first digit of day
 	strcpy(buf, dates[NUMDATES - 1]);

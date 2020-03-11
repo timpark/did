@@ -11,12 +11,16 @@ Every day you perform whatever task you wish to log, you simply type:
 
 Note that while you must type the task name the same each time, only the
 first five characters of the task name are printed in the report.  Since
-many people are often up past midnight, an option is given to easily add
-a task done yesterday.
+people can be up past midnight, an option is given to easily add a task
+done yesterday.
 
 There are defines at the top of the program where you can change the
 characters used for the report and the filename used.  You may wish to
 give it an absolute filename in a backed-up or synced directory.
+
+A task can be done more than once a day.  It will be marked in the
+grid as 2-9, then A-Z (for 10-35), then with a plus sign for
+higher counts.
 
 Usage:
 
@@ -41,10 +45,10 @@ Example output: ("exe" is short for "exercise")
     did - Simple command-line task logging ("did -h" for usage)
 
           ########################################################################
-     code #OOOO--OOOOO--OOOOO--OOOOO--OOOOO--OOOOO--OOOOO--OOOOO--OOOOO--OOOOO--O#
-      exe #OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-OO-O#
-    write #-----------------------------------------------------------OOOOOOOOOOO#
-          ########################################################################
+     code #@@@@--@@@@@--@@@@@--@@@@@--@@@@@--@@@@@--@@@@@--@@@@@--@@@@@--@@@@@--@# code (50)
+      exe #@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@@-@# exe (47)
+    write #-----------------------------------------------------------@@@@@@@@2@@# write (12)
+          ######################################################################## (70)
      2013  0000000001111111111222222222233000000000111111111122222222200000000011
     01-03  1234567890123456789012345678901123456789012345678901234567812345678901
            TWTFSSMTWTFSSMTWTFSSMTWTFSSMTWTFSSMTWTFSSMTWTFSSMTWTFSSMTWTFSSMTWTFSSM
